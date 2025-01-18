@@ -5,8 +5,6 @@ const stylesPath = path.join(__dirname, 'styles');
 const projectDistPath = path.join(__dirname, 'project-dist');
 const bundleCssPath = path.join(projectDistPath, 'bundle.css');
 
-
-
 function mergeStyles() {
     fs.rm(bundleCssPath, { recursive: true, force: true }, (err) => { //удаляю папку, чтобы обновлять содержимое
         if (err)
