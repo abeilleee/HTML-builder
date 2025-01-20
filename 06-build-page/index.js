@@ -21,12 +21,10 @@ fs.rm(projectDistPath, { recursive: true, force: true }, (err) => {
             return;
         }
 
-
         fs.readFile(templatePath, 'utf-8', (err, templateData) => {
             if (err) {
                 console.error('Error while reading tepmlate.html', err);
             }
-
    
             fs.readdir(componentsPath, (err, files) => {
                 if (err) {
@@ -37,33 +35,37 @@ fs.rm(projectDistPath, { recursive: true, force: true }, (err) => {
                 let count1 = 0;
 
                 files.forEach((component) => {
-                    const nameOfComponent = path.basename(component, path.extname(component));
+                    if (path.extname(component) === '.html') {
+                        const nameOfComponent = path.basename(component, path.extname(component));
 
-                    fs.readFile(path.join(componentsPath, component), 'utf-8', (err, data) => {
-                        if (err) {
-                            console.error('Error while reading a component', err);
-                        }
-                        components[nameOfComponent] = data;
-                        count1++;
-
-                        if (count1 === files.length) {
-                            let result = templateData;
-
-                          
-                            for (const [name, content] of Object.entries(components)) {
-                                const tag = `{{${name}}}`;
-                                result = result.replace(new RegExp(tag, 'g'), content);
+                        fs.readFile(path.join(componentsPath, component), 'utf-8', (err, data) => {
+                            if (err) {
+                                console.error('Error while reading a component', err);
                             }
+                            components[nameOfComponent] = data;
+                            count1++;
 
-                            fs.writeFile(path.join(projectDistPath, 'index.html'), result, (err) => {
-                                if (err) {
-                                    console.error("File index.html wasn't created", err);
-                                } else {
-                                    console.log('File index.html was created successfully');
+                            if (count1 === files.length) {
+                                let result = templateData;
+
+                              
+                                for (const [name, content] of Object.entries(components)) {
+                                    const tag = `{{${name}}}`;
+                                    result = result.replace(new RegExp(tag, 'g'), content);
                                 }
-                            });
-                        }
-                    });
+
+                                    fs.writeFile(path.join(projectDistPath, 'index.html'), result, (err) => {
+                                    if (err) {
+                                        console.error("File index.html wasn't created", err);
+                                    } else {
+                                        console.log('File index.html was created successfully');
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        console.log("ERROR while reading files from components, index.html file wasn't created, be sure components folder has only html files!!!");
+                    }
                 });
             });
         });
@@ -136,7 +138,7 @@ fs.rm(projectDistPath, { recursive: true, force: true }, (err) => {
                                         }
                                         count++;
                                         if (count === files.length) {
-                                            console.error('The folder was copied successfully');
+                                            console.error('The folder from assets was copied successfully');
                                         }
                                     });
                                 }
