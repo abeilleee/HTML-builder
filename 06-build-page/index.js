@@ -138,7 +138,7 @@ fs.rm(projectDistPath, { recursive: true, force: true }, (err) => {
                                         }
                                         count++;
                                         if (count === files.length) {
-                                            console.error('The folder from assets was copied successfully');
+                                            console.log('The folder from assets was copied successfully');
                                         }
                                     });
                                 }
